@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load mathfilters %}
+
+{% block title %}
+    {{ user }}'s {{ title }} | {{ block.super }}
+{% endblock %}
+
+{% block body %}
+
+    <br>
+    <h3 class="text-center">{{ user }}'s {{ title }}</h3>
+    <br>
+    <br>
+    <br>
+    {% if orders %}
+    <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Picture</th>
+            <th>Product Name</th>
+            <th>Status</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Discount</th>
+            <th>Total</th>
+            <th>Order Updated</th>
+            <th>Order Date</th>
+            <th>Edit Quantity</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+          <tr>
+            <td><a href="{{ order.image.url }}"><img src="{{ order.image.url }}" style="max-height: 35px; max-width: 35px; border-radius: 10%;"></a></td>
+            <td><a href="{{ order.get_absolute_url }}">{{ order.name }}</a></td>
+            <td>{{ order.status }}</td>
+            <td>{{ order.quantity }}</td>
+            <td>{{ order.price }}</td>
+            <td>{{ order.discount }}</td>
+            <td>{{ order.price |mul:order.discount |div:100 |sub:order.price |mul:-1 |mul:order.quantity }}</td>
+{#                            <td>{{ (order.price - order.discount) * order.quantity }}</td>#}
+            <td>{{ order.updated | timesince }}</td>
+            <td>{{ order.added | timesince }}</td>
+{#            <td><a href="{% url 'orders:update' pk=order.id %}" class="btn btn-success">Edit</a></td>#}
+            <td>
+                <div class="update_quantity_button">
+                    <button type="button" class="btn btn-success">Edit</button>
+                </div>
+                <div class="update_quantity" style="display: none;">
+                <form method="POST" action="{% url 'orders:update' pk=order.id %}" class="form-group">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" value="{{ order.quantity }}" class="form-control" style="display: inline-block; max-width: 80px; max-height: 33px;">
+                    <input type="hidden" name="product_id" value="{{ order.product_id }}">
+                    <button type="submit" class="btn btn-success save">Save</button>
+                </form>
+                </div>
+            </td>
+            <td>
+                <a href="" data-toggle="modal" class="btn btn-danger" data-target="#delete_order{{ order.id }}">
+                    Delete
+                </a>
+                {% include 'orders/delete_order_modal.html' %}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      <br>
+      <br>
+      {% if request.user.is_authenticated %}
+          {% if orders %}
+            <a href="" data-toggle="modal" class="btn btn-success" data-target="#confirm_buy" style="display: table; margin: 0 auto;">
+                <i class="fa fa-shopping-cart"></i>&emsp;Buy
+            </a>
+          {% endif %}
+        {% include 'orders/cofirm_buy_modal.html' %}
+      {% endif %}
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      {% else %}
+        <h3 class="text-center">You have not {{ title }} orders yet!</h3>
+      {% endif %}
+
+{% endblock %}
