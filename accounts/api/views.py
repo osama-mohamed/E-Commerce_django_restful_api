@@ -12,7 +12,13 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, I
 
 from django.contrib.auth import get_user_model
 
-from .serializers import RegisterSerializer, LoginSerializer, UpdateSerializer
+from .serializers import (
+    RegisterSerializer,
+    LoginSerializer,
+    ProfileSerializer,
+    UpdateSerializer,
+
+    )
 from accounts.models import Account
 from .permissions import IsOwnerOrReadOnly
 
@@ -37,9 +43,19 @@ class LoginAPIView(APIView):
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
+class ProfileAPIView(RetrieveAPIView):
+    serializer_class = ProfileSerializer
+    queryset = Account.objects.all()
+    lookup_url_kwarg = 'id'
+    lookup_field = 'id'
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
+
+
 class ProfileUpdateAPIView(RetrieveUpdateAPIView):
     serializer_class = UpdateSerializer
     queryset = Account.objects.all()
     lookup_field = 'user'
     lookup_url_kwarg = 'id'
-    permission_classes = [IsOwnerOrReadOnly, IsAuthenticated, IsAdminUser]
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
+
+

@@ -3,6 +3,7 @@ from rest_framework.serializers import (
     CharField,
     EmailField,
     ValidationError,
+    HyperlinkedIdentityField,
     )
 
 from django.contrib.auth import get_user_model
@@ -117,6 +118,33 @@ class LoginSerializer(ModelSerializer):
         return data
 
 
+class ProfileSerializer(ModelSerializer):
+    edit_url = HyperlinkedIdentityField(
+        view_name='accounts_api:update_api',
+        lookup_field='id',
+    )
+
+    class Meta:
+        model = Account
+        fields = [
+            'id',
+            'edit_url',
+            'first_name',
+            'last_name',
+            'username',
+            'email',
+            'gender',
+            'country',
+            'image',
+            'region',
+            'address1',
+            'address2',
+            'phone_number1',
+            'phone_number2',
+            'comments',
+        ]
+
+
 class UpdateSerializer(ModelSerializer):
     first_name = CharField(read_only=True)
     last_name = CharField(read_only=True)
@@ -126,6 +154,7 @@ class UpdateSerializer(ModelSerializer):
     class Meta:
         model = Account
         fields = [
+            'id',
             'first_name',
             'last_name',
             'username',
