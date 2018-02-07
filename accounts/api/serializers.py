@@ -6,6 +6,7 @@ from rest_framework.serializers import (
     )
 
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 
 User = get_user_model()
 
@@ -72,3 +73,39 @@ class RegisterSerializer(ModelSerializer):
         if password != password_confirmation:
             raise ValidationError('Passwords dose not matched!')
         return password_confirmation
+
+
+class LoginSerializer(ModelSerializer):
+    username = CharField(label='Username', required=False, allow_blank=True)
+    email = EmailField(label='E-mail', required=False, allow_blank=True)
+    token = CharField(allow_blank=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'email',
+            'password',
+            'token',
+        ]
+
+    def validate(self, data):
+        username = data.get('username', None)
+        email = data.get('email', None)
+        password = data.get('password')
+        if not username and not email:
+            raise ValidationError('Username or email are required for login!')
+        user = User.objects.filter(
+            Q(username=username, is_active=True) |
+            Q(email=email, is_active=True)
+        ).distinct()
+        user = user.exclude(email__isnull=True).exclude(email__iexact='')
+        if user.exists() and user.count() == 1:
+            user_data = user.first()
+        else:
+            raise ValidationError('Username or Email is not valid!')
+        if user_data:
+            if not user_data.check_password(password):
+                raise ValidationError('Incorrect Password!')
+        data['token'] = 'random token is here for test'
+        return data
