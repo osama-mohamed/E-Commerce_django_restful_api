@@ -59,3 +59,8 @@ class ProfileUpdateAPIView(RetrieveUpdateAPIView):
     permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
 
 
+class ProfileDeleteAPIView(DestroyAPIView):
+    serializer_class = ProfileSerializer
+    queryset = User.objects.all()
+    lookup_field = 'id'
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]

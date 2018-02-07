@@ -52,7 +52,9 @@ class RegisterSerializer(ModelSerializer):
             email=email,
         )
         user.set_password(password)
+        user.is_active = False
         user.save()
+        user.account.send_activation_email()
         return validated_data
 
     def validate_username(self, username):
@@ -123,12 +125,17 @@ class ProfileSerializer(ModelSerializer):
         view_name='accounts_api:update_api',
         lookup_field='id',
     )
+    delete_url = HyperlinkedIdentityField(
+        view_name='accounts_api:delete_api',
+        lookup_field='id',
+    )
 
     class Meta:
         model = Account
         fields = [
             'id',
             'edit_url',
+            'delete_url',
             'first_name',
             'last_name',
             'username',
