@@ -18,12 +18,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'mathfilters',
+    'rest_framework',
     'accounts.apps.AccountsConfig',
     'products.apps.ProductsConfig',
     'orders.apps.OrdersConfig',
     'reviews.apps.ReviewsConfig',
     'contact_us.apps.ContactUsConfig',
 ]
+
+# CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

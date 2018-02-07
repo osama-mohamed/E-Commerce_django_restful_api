@@ -15,6 +15,10 @@ urlpatterns = [
     url(r'^reviews/', include('reviews.urls', namespace='reviews')),
     url(r'^contact_us/', include('contact_us.urls', namespace='contact_us')),
     url(r'^$', ProductsListView.as_view(), name='main_home'),
+
+
+    url(r'^api/accounts/', include('accounts.api.urls', namespace='accounts_api')),
+
 ]# + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
