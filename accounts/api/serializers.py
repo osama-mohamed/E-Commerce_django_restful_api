@@ -8,6 +8,8 @@ from rest_framework.serializers import (
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 
+from accounts.models import Account
+
 User = get_user_model()
 
 
@@ -37,10 +39,14 @@ class RegisterSerializer(ModelSerializer):
 
     def create(self, validated_data):
         # username = self.validated_data.get('username')
+        first_name = validated_data['first_name']
+        last_name = validated_data['last_name']
         username = validated_data['username']
         email = validated_data['email']
         password = validated_data['password']
         user = User(
+            first_name=first_name,
+            last_name=last_name,
             username=username,
             email=email,
         )
@@ -108,4 +114,53 @@ class LoginSerializer(ModelSerializer):
             if not user_data.check_password(password):
                 raise ValidationError('Incorrect Password!')
         data['token'] = 'random token is here for test'
+        return data
+
+
+class UpdateSerializer(ModelSerializer):
+    first_name = CharField(read_only=True)
+    last_name = CharField(read_only=True)
+    username = CharField(read_only=True)
+    email = CharField(read_only=True)
+
+    class Meta:
+        model = Account
+        fields = [
+            'first_name',
+            'last_name',
+            'username',
+            'email',
+            'gender',
+            'country',
+            'image',
+            'region',
+            'address1',
+            'address2',
+            'phone_number1',
+            'phone_number2',
+            'comments',
+        ]
+
+    def validate(self, data):
+        gender = data.get('gender')
+        country = data.get('country')
+        region = data.get('region')
+        address1 = data.get('address1')
+        phone_number1 = data.get('phone_number1')
+        phone_number2 = data.get('phone_number2')
+        image = data.get('image')
+        if not gender:
+            raise ValidationError('Please select your gender!')
+        if not country:
+            raise ValidationError('Please enter your country!')
+        if not region:
+            raise ValidationError('Please enter your region!')
+        if not address1:
+            raise ValidationError('Please enter your address1!')
+        if not phone_number1:
+            raise ValidationError('Please enter your phone number1!')
+        if not phone_number2:
+            raise ValidationError('Please enter your phone number2!')
+        if not image:
+            raise ValidationError('You should upload an image!')
         return data

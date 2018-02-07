@@ -2,7 +2,7 @@ from django.conf.urls import url
 from .views import (
     RegisterAPIView,
     LoginAPIView,
-    # ProfileUpdateAPIView,
+    ProfileUpdateAPIView,
     )
 
 urlpatterns = [
@@ -12,6 +12,6 @@ urlpatterns = [
     # url(r'^logout/$', UserLogoutView.as_view(), name='logout'),
     # url(r'^change_password/$', UserChangePasswordView.as_view(), name='change_password'),
     # url(r'^profile/$', UserProfileView.as_view(), name='profile'),
-    # url(r'^profile/update/(?P<pk>\d+)/$', ProfileUpdateAPIView.as_view(), name='update_api'),
+    url(r'^profile/update/(?P<id>\d+)/$', ProfileUpdateAPIView.as_view(), name='update_api'),
     # url(r'^profile/delete/$', ProfileDeleteView.as_view(), name='delete'),
 ]
