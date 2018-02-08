@@ -19,6 +19,7 @@ urlpatterns = [
 
     url(r'^api/accounts/', include('accounts.api.urls', namespace='accounts_api')),
     url(r'^api/products/', include('products.api.urls', namespace='products_api')),
+    url(r'^api/orders/', include('orders.api.urls', namespace='orders_api')),
 
 ]# + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
