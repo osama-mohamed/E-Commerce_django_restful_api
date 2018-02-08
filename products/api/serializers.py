@@ -12,7 +12,6 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 from products.models import Product
-from accounts.api.serializers import ProfileSerializer
 
 User = get_user_model()
 
