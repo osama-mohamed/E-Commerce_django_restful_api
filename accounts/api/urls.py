@@ -6,7 +6,7 @@ from .views import (
     ProfileUpdateAPIView,
     ProfileDeleteAPIView,
     ChangePasswordAPIView,
-    )
+)
 
 urlpatterns = [
     url(r'^register/', RegisterAPIView.as_view(), name='register_api'),

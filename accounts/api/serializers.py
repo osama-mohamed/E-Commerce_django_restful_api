@@ -215,5 +215,3 @@ class ChangePasswordSerializer(Serializer):
         if new_password != new_password_confirmation:
             raise ValidationError('Passwords dose not matched!')
         return new_password_confirmation
-
-

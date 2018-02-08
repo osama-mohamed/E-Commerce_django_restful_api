@@ -19,7 +19,7 @@ from .serializers import (
     ProfileSerializer,
     UpdateSerializer,
     ChangePasswordSerializer,
-    )
+)
 from accounts.models import Account
 from .permissions import IsOwnerOrReadOnly
 
