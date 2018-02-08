@@ -64,3 +64,14 @@ class ProductDetailAPIView(RetrieveAPIView):
     def get_queryset(self, *args, **kwargs):
         queryset = Product.objects.filter(slug__iexact=self.kwargs['slug'], publish=True)
         return queryset
+
+
+class CategoryAPIView(ListAPIView):
+    serializer_class = ProductsSerializer
+    # queryset = Product.objects.all().order_by('-id')
+    pagination_class = ProductPageNumberPagination
+    permission_classes = [AllowAny, ]
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = Product.objects.filter(publish=True, category__category=self.kwargs['category']).order_by('-id')
+        return queryset

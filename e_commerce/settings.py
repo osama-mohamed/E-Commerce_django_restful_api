@@ -124,3 +124,5 @@ MANAGERS = ADMINS
 
 
 SHORTCODE_MIN = 50
+
+BASE_URL = 'http://localhost:8000'  # used in product detail to back to all products in api
