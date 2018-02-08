@@ -1,8 +1,5 @@
 from rest_framework.generics import (
-    CreateAPIView,
-    RetrieveAPIView,
     RetrieveUpdateAPIView,
-    UpdateAPIView,
     DestroyAPIView,
     ListAPIView,
 )
@@ -10,9 +7,7 @@ from rest_framework.generics import (
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, IsAuthenticated, AllowAny
-
-# from django.contrib.auth import get_user_model, update_session_auth_hash
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 from .serializers import (
     OrdersSerializer,
@@ -24,8 +19,6 @@ from products.models import Product
 from orders.models import Checkout
 from .permissions import IsOwnerOrReadOnly
 
-# User = get_user_model()
-
 
 class AddToCartAPIView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthenticated]
@@ -33,7 +26,7 @@ class AddToCartAPIView(APIView):
     def post(self, request, id):
         user = self.request.user
         if user.is_authenticated():
-            qs = Checkout.objects.filter(product_id=id, status='waiting')
+            qs = Checkout.objects.filter(product_id=id, user=user, status='waiting')
             if qs.exists():
                 return Response({'message': ['already exists!']}, status=HTTP_200_OK)
             else:
@@ -55,7 +48,6 @@ class AddToCartAPIView(APIView):
 
 class CartAPIView(ListAPIView):
     serializer_class = CartSerializer
-    # queryset = Product.objects.all().order_by('-id')
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthenticated]
 
     def get_queryset(self, *args, **kwargs):
@@ -65,7 +57,6 @@ class CartAPIView(ListAPIView):
 
 class PendingOrdersAPIView(ListAPIView):
     serializer_class = OrdersSerializer
-    # queryset = Product.objects.all().order_by('-id')
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthenticated]
 
     def get_queryset(self, *args, **kwargs):
@@ -75,7 +66,6 @@ class PendingOrdersAPIView(ListAPIView):
 
 class AcceptedOrdersAPIView(ListAPIView):
     serializer_class = OrdersSerializer
-    # queryset = Product.objects.all().order_by('-id')
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthenticated]
 
     def get_queryset(self, *args, **kwargs):
@@ -85,7 +75,6 @@ class AcceptedOrdersAPIView(ListAPIView):
 
 class RejectedOrdersAPIView(ListAPIView):
     serializer_class = OrdersSerializer
-    # queryset = Product.objects.all().order_by('-id')
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthenticated]
 
     def get_queryset(self, *args, **kwargs):
@@ -95,7 +84,6 @@ class RejectedOrdersAPIView(ListAPIView):
 
 class OrderUpdateAPIView(RetrieveUpdateAPIView):
     serializer_class = OrderUpdateSerializer
-    # queryset = Checkout.objects.all()
     lookup_field = 'id'
     lookup_url_kwarg = 'id'
     permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
@@ -104,3 +92,49 @@ class OrderUpdateAPIView(RetrieveUpdateAPIView):
         queryset = Checkout.objects.filter(user=self.request.user, status='waiting').order_by('-id')
         return queryset
 
+
+class OrderDeleteAPIView(DestroyAPIView):
+    serializer_class = OrdersSerializer
+    lookup_field = 'id'
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = Checkout.objects.filter(user=self.request.user, status='waiting', id=self.kwargs['id']).order_by('-id')
+        return queryset
+
+
+class BuyOrdersAPIView(APIView):
+    lookup_field = 'id'
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
+
+    def post(self, request):
+        username = self.request.user
+        if username is None:
+            raise Response({'message': ['you have not the permission to do that!']}, status=HTTP_400_BAD_REQUEST)
+        else:
+            account = Account.objects.filter(user=username)
+            qs = Checkout.objects.filter(user=username, status='waiting')
+            if account.exists():
+                user = account.first()
+                if user.gender is None \
+                or user.country is None \
+                or user.region is None \
+                or user.address1 is None \
+                or user.phone_number1 is None \
+                or user.phone_number2 is None:
+                    return Response(
+                        {'message': ['add your information first to complete buy orders!']},
+                        status=HTTP_200_OK
+                    )
+            if qs.exists():
+                for order in qs:
+                    order.status = 'pending'
+                    order.save()
+                    product = Product.objects.filter(id=order.product_id).first()
+                    product.quantity -= order.quantity
+                    product.number_of_sales += 1
+                    product.save()
+                return Response(
+                        {'message': ['thank you for buying orders!']},
+                        status=HTTP_200_OK
+                    )

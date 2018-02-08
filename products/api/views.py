@@ -19,7 +19,6 @@ from .pagination import ProductPageNumberPagination
 
 class AllProductsAPIView(ListAPIView):
     serializer_class = ProductsSerializer
-    # queryset = Product.objects.all().order_by('-id')
     pagination_class = ProductPageNumberPagination
     permission_classes = [AllowAny, ]
 
@@ -30,7 +29,6 @@ class AllProductsAPIView(ListAPIView):
 
 class ProductsAPIView(ListAPIView):
     serializer_class = ProductsSerializer
-    # queryset = Product.objects.all().order_by('-id')
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name', 'description']
     permission_classes = [AllowAny, ]
@@ -48,7 +46,6 @@ class ProductsAPIView(ListAPIView):
 
 class ProductDetailAPIView(RetrieveAPIView):
     serializer_class = ProductDetailSerializer
-    # queryset = Product.objects.all().order_by('-id')
     lookup_field = 'slug'
     permission_classes = [AllowAny, ]
 
@@ -59,7 +56,6 @@ class ProductDetailAPIView(RetrieveAPIView):
 
 class CategoryAPIView(ListAPIView):
     serializer_class = ProductsSerializer
-    # queryset = Product.objects.all().order_by('-id')
     pagination_class = ProductPageNumberPagination
     permission_classes = [AllowAny, ]
 

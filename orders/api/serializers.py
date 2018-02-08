@@ -1,25 +1,15 @@
 from rest_framework.serializers import (
     ModelSerializer,
-    Serializer,
-    CharField,
-    EmailField,
-    ImageField,
-    HiddenField,
     ValidationError,
     HyperlinkedIdentityField,
     SerializerMethodField,
-    )
+)
 
-from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse
 from django.conf import settings
-from django.db.models import Q
 
-from accounts.models import Account
 from orders.models import Checkout
 from products.models import Product
-
-User = get_user_model()
 
 
 class OrdersSerializer(ModelSerializer):
@@ -52,12 +42,17 @@ class CartSerializer(ModelSerializer):
         view_name='orders_api:update_api',
         lookup_field='id',
     )
+    delete_url = HyperlinkedIdentityField(
+        view_name='orders_api:delete_api',
+        lookup_field='id',
+    )
 
     class Meta:
         model = Checkout
         fields = [
             'id',
             'edit_url',
+            'delete_url',
             'user',
             'status',
             'product_id',

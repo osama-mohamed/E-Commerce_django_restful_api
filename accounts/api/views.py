@@ -9,7 +9,7 @@ from rest_framework.generics import (
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 
 from django.contrib.auth import get_user_model, update_session_auth_hash
 
@@ -46,25 +46,34 @@ class LoginAPIView(APIView):
 
 class ProfileAPIView(RetrieveAPIView):
     serializer_class = ProfileSerializer
-    queryset = Account.objects.all()
     lookup_url_kwarg = 'id'
     lookup_field = 'id'
     permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = Account.objects.filter(user=self.request.user, id=self.kwargs['id'], activated=True)
+        return queryset
 
 
 class ProfileUpdateAPIView(RetrieveUpdateAPIView):
     serializer_class = UpdateSerializer
-    queryset = Account.objects.all()
     lookup_field = 'user'
     lookup_url_kwarg = 'id'
     permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
 
+    def get_queryset(self, *args, **kwargs):
+        queryset = Account.objects.filter(user=self.request.user, id=self.kwargs['id'], activated=True)
+        return queryset
+
 
 class ProfileDeleteAPIView(DestroyAPIView):
     serializer_class = ProfileSerializer
-    queryset = User.objects.all()
     lookup_field = 'id'
     permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = User.objects.filter(username=self.request.user, id=self.kwargs['id'], is_active=True)
+        return queryset
 
 
 class ChangePasswordAPIView(UpdateAPIView):
