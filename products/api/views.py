@@ -20,8 +20,20 @@ from .serializers import (
 )
 from products.models import Product
 from .permissions import IsOwnerOrReadOnly
+from .pagination import ProductPageNumberPagination
 
 User = get_user_model()
+
+
+class AllProductsAPIView(ListAPIView):
+    serializer_class = ProductsSerializer
+    # queryset = Product.objects.all().order_by('-id')
+    pagination_class = ProductPageNumberPagination
+    permission_classes = [AllowAny, ]
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = Product.objects.filter(publish=True).order_by('-id')
+        return queryset
 
 
 class ProductsAPIView(ListAPIView):
@@ -30,7 +42,7 @@ class ProductsAPIView(ListAPIView):
     permission_classes = [AllowAny, ]
 
     def get_queryset(self, *args, **kwargs):
-        queryset = Product.objects.filter(publish=True)
+        queryset = Product.objects.filter(publish=True).order_by('-id')
         return queryset
 
 
