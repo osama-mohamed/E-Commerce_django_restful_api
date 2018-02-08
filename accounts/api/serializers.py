@@ -1,5 +1,6 @@
 from rest_framework.serializers import (
     ModelSerializer,
+    Serializer,
     CharField,
     EmailField,
     ValidationError,
@@ -200,3 +201,19 @@ class UpdateSerializer(ModelSerializer):
         if not image:
             raise ValidationError('You should upload an image!')
         return data
+
+
+class ChangePasswordSerializer(Serializer):
+    old_password = CharField(label='Old Password', required=True)
+    new_password = CharField(label='New Password', required=True)
+    new_password_confirmation = CharField(label='Confirm Password', required=True)
+
+    def validate_new_password_confirmation(self, new_password_confirmation):
+        data = self.get_initial()
+        new_password = data.get('new_password')
+        new_password_confirmation = new_password_confirmation
+        if new_password != new_password_confirmation:
+            raise ValidationError('Passwords dose not matched!')
+        return new_password_confirmation
+
+
