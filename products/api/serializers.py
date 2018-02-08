@@ -59,11 +59,16 @@ class ProductDetailSerializer(ModelSerializer):
     user = SerializerMethodField(read_only=True)
     category = SerializerMethodField(read_only=True)
     all_products_url = SerializerMethodField()
+    add_review_url = HyperlinkedIdentityField(
+        view_name='reviews_api:add_api',
+        lookup_field='id',
+    )
 
     class Meta:
         model = Product
         fields = [
             'all_products_url',
+            'add_review_url',
             'id',
             'user',
             'category',
