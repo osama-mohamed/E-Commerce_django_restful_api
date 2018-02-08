@@ -1,10 +1,5 @@
 from rest_framework.generics import (
-    CreateAPIView,
-    RetrieveAPIView,
-    RetrieveUpdateAPIView,
-    UpdateAPIView,
     DestroyAPIView,
-    ListAPIView,
 )
 
 from rest_framework.response import Response
@@ -13,25 +8,19 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 from .serializers import (
-    AddReviewSerializer,
+    ReviewSerializer,
 )
 from accounts.models import Account
 from products.models import Product
-from orders.models import Checkout
 from reviews.models import Review
 from .permissions import IsOwnerOrReadOnly
 
 
 class AddReviewAPIView(APIView):
-    serializer_class = AddReviewSerializer
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        # print(new_data['rate'])
-        # print(new_data['review'])
-        # print(self.kwargs['id'])
-        # print(request.user)
-        # print(request.POST.get('rate'))
-        # print(request.POST.get('review'))
         id = self.kwargs['id']
         user = self.request.user
         if user.is_authenticated:
@@ -59,7 +48,7 @@ class AddReviewAPIView(APIView):
                     status=HTTP_400_BAD_REQUEST
                 )
             else:
-                serializer = AddReviewSerializer(data=request.data)
+                serializer = ReviewSerializer(data=request.data)
                 if serializer.is_valid():
                     new_data = serializer.data
                     new_review = Review.objects.create(
@@ -89,10 +78,11 @@ class AddReviewAPIView(APIView):
             )
 
 
-class UpdateReviewAPIView(RetrieveUpdateAPIView):
-    serializer_class = AddReviewSerializer
+class UpdateReviewAPIView(APIView):
+    serializer_class = ReviewSerializer
     # lookup_field = 'id'
     # lookup_url_kwarg = 'id'
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
 
     def get_queryset(self, *args, **kwargs):
         queryset = Review.objects.all()
@@ -120,7 +110,7 @@ class UpdateReviewAPIView(RetrieveUpdateAPIView):
                     status=HTTP_400_BAD_REQUEST
                 )
             else:
-                serializer = AddReviewSerializer(data=request.data)
+                serializer = ReviewSerializer(data=request.data)
                 if serializer.is_valid():
                     new_data = serializer.data
                     qs = Review.objects.filter(user=self.request.user, product=product).first()
@@ -147,3 +137,51 @@ class UpdateReviewAPIView(RetrieveUpdateAPIView):
                 status=HTTP_400_BAD_REQUEST
             )
 
+
+class DeleteReviewAPIView(DestroyAPIView):
+    serializer_class = ReviewSerializer
+    lookup_field = 'id'
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        user = self.request.user
+        id = self.kwargs['id']
+        if user.is_authenticated:
+            product = Product.objects.filter(id=id).first()
+            if product.block_review is True:
+                return Response(
+                    {'message': ['This product is blocked for deleting review products!']},
+                    status=HTTP_400_BAD_REQUEST
+                )
+            user = Account.objects.filter(user=self.request.user).first()
+            if user.block_review is True:
+                return Response(
+                    {'message': ['You blocked from deleting review products!']},
+                    status=HTTP_400_BAD_REQUEST
+                )
+            queryset = Review.objects.filter(user=self.request.user, product_id=self.kwargs['id'])
+            if queryset.exists() and queryset.count() == 1:
+                review = queryset.first()
+                review.delete()
+                products = Review.objects.filter(product_id=id)
+                summition_rate = 0
+                products_length = 0
+                for pro in products:
+                    summition_rate += pro.rate
+                    products_length += 1
+                try:
+                    avg = summition_rate / products_length
+                except ZeroDivisionError:
+                    avg = 0
+                avg_rate = Product.objects.get(id=id)
+                avg_rate.avg_rate = avg
+                avg_rate.save()
+                return Response(
+                    {'message': ['Successfully deleted your product review!']},
+                    status=HTTP_400_BAD_REQUEST
+                )
+        else:
+            return Response(
+                {'message': ['You do not have permission to do that!']},
+                status=HTTP_400_BAD_REQUEST
+            )

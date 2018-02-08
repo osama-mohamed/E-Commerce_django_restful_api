@@ -1,17 +1,13 @@
 from rest_framework.serializers import (
     ModelSerializer,
     ValidationError,
-    HyperlinkedIdentityField,
-    SerializerMethodField,
 )
 
-from django.core.urlresolvers import reverse
-from django.conf import settings
 
 from reviews.models import Review
 
 
-class AddReviewSerializer(ModelSerializer):
+class ReviewSerializer(ModelSerializer):
 
     class Meta:
         model = Review
