@@ -1,21 +1,13 @@
 from rest_framework.serializers import (
     ModelSerializer,
-    Serializer,
-    CharField,
-    EmailField,
-    ValidationError,
     HyperlinkedIdentityField,
     SerializerMethodField,
     )
 
-from django.contrib.auth import get_user_model
-from django.db.models import Q
-from django.core.urlresolvers import reverse_lazy, reverse
+from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from products.models import Product
-
-User = get_user_model()
 
 
 class ProductsSerializer(ModelSerializer):

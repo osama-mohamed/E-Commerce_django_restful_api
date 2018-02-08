@@ -1,29 +1,20 @@
 from rest_framework.generics import (
-    CreateAPIView,
     RetrieveAPIView,
-    RetrieveUpdateAPIView,
-    UpdateAPIView,
-    DestroyAPIView,
     ListAPIView,
 )
 
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny
 
-from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.db.models import Q
+
 from .serializers import (
     ProductsSerializer,
     ProductDetailSerializer,
 )
-from products.models import Product
-from .permissions import IsOwnerOrReadOnly
-from .pagination import ProductPageNumberPagination
 
-User = get_user_model()
+from products.models import Product
+from .pagination import ProductPageNumberPagination
 
 
 class AllProductsAPIView(ListAPIView):
