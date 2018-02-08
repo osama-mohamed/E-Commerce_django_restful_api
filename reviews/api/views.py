@@ -1,6 +1,8 @@
 from rest_framework.generics import (
     CreateAPIView,
+    RetrieveAPIView,
     RetrieveUpdateAPIView,
+    UpdateAPIView,
     DestroyAPIView,
     ListAPIView,
 )
@@ -51,6 +53,11 @@ class AddReviewAPIView(APIView):
                     {'message': ['You can not add this product review because you already added a review before!']},
                     status=HTTP_400_BAD_REQUEST
                 )
+            if request.POST.get('review') == '' or request.POST.get('rate') is None:
+                return Response(
+                    {'message': ['You must write a valid product review!']},
+                    status=HTTP_400_BAD_REQUEST
+                )
             else:
                 serializer = AddReviewSerializer(data=request.data)
                 if serializer.is_valid():
@@ -81,4 +88,62 @@ class AddReviewAPIView(APIView):
                 status=HTTP_400_BAD_REQUEST
             )
 
+
+class UpdateReviewAPIView(RetrieveUpdateAPIView):
+    serializer_class = AddReviewSerializer
+    # lookup_field = 'id'
+    # lookup_url_kwarg = 'id'
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = Review.objects.all()
+        return queryset
+
+    def post(self, request, *args, **kwargs):
+        id = self.kwargs['id']
+        user = self.request.user
+        if user.is_authenticated:
+            product = Product.objects.filter(id=id, publish=True).first()
+            if product.block_review is True:
+                return Response(
+                    {'message': ['This product is blocked for editing review products!']},
+                    status=HTTP_400_BAD_REQUEST
+                )
+            user = Account.objects.filter(user=self.request.user).first()
+            if user.block_review is True:
+                return Response(
+                    {'message': ['You blocked from editing review products!']},
+                    status=HTTP_400_BAD_REQUEST
+                )
+            if request.POST.get('review') == '' or request.POST.get('rate') is None:
+                return Response(
+                    {'message': ['You must write a valid product review!']},
+                    status=HTTP_400_BAD_REQUEST
+                )
+            else:
+                serializer = AddReviewSerializer(data=request.data)
+                if serializer.is_valid():
+                    new_data = serializer.data
+                    qs = Review.objects.filter(user=self.request.user, product=product).first()
+                    qs.review = new_data['review']
+                    qs.rate = new_data['rate']
+                    qs.save()
+                    products = Review.objects.filter(product_id=id)
+                    summition_rate = 0
+                    products_length = 0
+                    for pro in products:
+                        summition_rate += pro.rate
+                        products_length += 1
+                    avg = summition_rate / products_length
+                    avg_rate = Product.objects.get(id=id)
+                    avg_rate.avg_rate = avg
+                    avg_rate.save()
+                    return Response(
+                        {'message': ['Successfully updated your product review!']},
+                        status=HTTP_200_OK
+                    )
+        else:
+            return Response(
+                {'message': ['You do not have permission to do that!']},
+                status=HTTP_400_BAD_REQUEST
+            )
 
