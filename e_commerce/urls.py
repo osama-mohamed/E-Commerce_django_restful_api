@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^api/reviews/', include('reviews.api.urls', namespace='reviews_api')),
     url(r'^api/contact_us/', include('contact_us.api.urls', namespace='contact_us_api')),
 
-]# + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
 
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

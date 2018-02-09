@@ -1,6 +1,5 @@
 import os
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '+4251f+7to#f=59^wu6_n0zlf0qq%$+ba%=b-0h%$zi-)w7tj&'
@@ -107,8 +106,6 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static_cdn")
 MEDIA_ROOT = os.path.join(BASE_DIR, "media_cdn")
-# STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static")
-
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'osama.buy.sell@gmail.com'

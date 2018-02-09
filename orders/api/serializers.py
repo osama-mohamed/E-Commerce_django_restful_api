@@ -95,7 +95,6 @@ class OrderUpdateSerializer(ModelSerializer):
             'id',
             'user',
             'status',
-            # 'product_id',
             'name',
             'price',
             'discount',
@@ -111,11 +110,6 @@ class OrderUpdateSerializer(ModelSerializer):
 
     def validate(self, data):
         product_id = data.get('product_id')
-        # user = None
-        # request = self.context.get("request")
-        # if request and hasattr(request, "user"):
-        #     user = request.user
-        # print(user)
         quantity = data.get('quantity')
         available = Product.objects.filter(id=product_id).first().quantity
         if quantity > available:

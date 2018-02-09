@@ -9,7 +9,6 @@ from django.urls import reverse_lazy
 
 from .forms import RegisterForm, LoginForm, UpdateProfileForm
 from .models import Account
-from orders.models import Checkout
 
 
 User = get_user_model()
@@ -114,28 +113,14 @@ class UserProfileView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(UserProfileView, self).get_context_data(**kwargs)
         context['title'] = 'Profile'
-        # context['orders'] = Checkout.objects.filter(user=self.request.user)
         return context
 
 
 class ProfileUpdateView(UpdateView):
     form_class = UpdateProfileForm
     model = Account
-    # fields = [
-    #     'gender',
-    #     'country',
-    #     'image',
-    #     'region',
-    #     'address1',
-    #     'address2',
-    #     'phone_number1',
-    #     'phone_number2',
-    #     'comments',
-    # ]
     template_name = 'accounts/update_profile.html'
     success_url = reverse_lazy('accounts:profile')
-    # lookup_field = 'id'
-    # lookup_url_kwarg = 'id'
 
     def get_context_data(self, **kwargs):
         context = super(ProfileUpdateView, self).get_context_data(**kwargs)
@@ -156,12 +141,3 @@ class ProfileDeleteView(View):
                 account = qs.first()
                 account.delete()
                 return redirect('accounts:login')
-
-# def delete_user(request):
-#     qs = User.objects.filter(username=request.user)
-#     if qs.exists() and qs.count() == 1:
-#         account = qs.first()
-#         print(account)
-#         print(account.id)
-#         account.delete()
-#         return redirect('accounts:login')

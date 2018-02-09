@@ -12,7 +12,6 @@ from .serializers import (
     ProductsSerializer,
     ProductDetailSerializer,
 )
-
 from products.models import Product
 from .pagination import ProductPageNumberPagination
 

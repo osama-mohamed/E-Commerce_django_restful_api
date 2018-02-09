@@ -34,7 +34,6 @@ class AllProductsListView(ListView):
 
 
 class ProductsListView(ListView):
-    # queryset = Product.objects.all()
     queryset = ''
     template_name = 'products/product_list.html'
 

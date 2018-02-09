@@ -97,5 +97,4 @@ class ProductDetailSerializer(ModelSerializer):
         return str(obj.category)
 
     def get_all_products_url(self, obj):
-        # return str('http://localhost:8000' + reverse('products_api:list_api'))
         return settings.BASE_URL + reverse('products_api:list_api')

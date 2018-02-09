@@ -9,7 +9,7 @@ from rest_framework.generics import (
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from django.contrib.auth import get_user_model, update_session_auth_hash
 

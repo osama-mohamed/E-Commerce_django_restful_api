@@ -1,11 +1,8 @@
-from rest_framework.generics import (
-    DestroyAPIView,
-)
-
+from rest_framework.generics import DestroyAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import (
     ReviewSerializer,
@@ -80,8 +77,6 @@ class AddReviewAPIView(APIView):
 
 class UpdateReviewAPIView(APIView):
     serializer_class = ReviewSerializer
-    # lookup_field = 'id'
-    # lookup_url_kwarg = 'id'
     permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
 
     def get_queryset(self, *args, **kwargs):

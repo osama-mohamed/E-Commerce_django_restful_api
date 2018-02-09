@@ -29,14 +29,8 @@ urlpatterns = [
 
     url(r'^profile/$', UserProfileView.as_view(), name='profile'),
     url(r'^profile/update/(?P<pk>\d+)/$', ProfileUpdateView.as_view(), name='update'),
-
-
-
     url(r'^profile/delete/$', ProfileDeleteView.as_view(), name='delete'),
 
-    # url(r'^profile/update/$', ProfileUpdateView.as_view(), name='update'),
-
-    # url(r'^login/$', LoginView.as_view(template_name='accounts/login.html'), name='login'),
 
     url(r'^reset_password/$', password_reset, {
         'template_name': 'accounts/reset_password.html',

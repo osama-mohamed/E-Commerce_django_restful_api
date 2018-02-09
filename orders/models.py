@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.db.models.signals import pre_save, post_save
 from django.core.urlresolvers import reverse
 
 
@@ -34,6 +33,3 @@ class Checkout(models.Model):
 
     class Meta:
         verbose_name_plural = 'Orders'
-
-    # def get_absolute_order_url(self):
-    #     return reverse('orders:order', kwargs={'pk': self.id})
