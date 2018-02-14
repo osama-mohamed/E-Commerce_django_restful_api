@@ -10,17 +10,19 @@
     3. Orders
     4. Reviews
     5. Contact Us
-* user registration 
-* user login
-* user logout 
-* change password
-* reset password
-* user delete account
-* send activation code when register
-* order products
-* add review to products
-* calculate avg to every product
-* contact us message
+* User register 
+* User login
+* User logout 
+* Change password
+* Reset password
+* User delete account
+* Send activation code when register
+* Order products
+* Edit order quantity -with jquery functionality-
+* Delete order
+* Add review to products
+* Calculate avg to every product
+* Contact us message
 
 
 
@@ -48,67 +50,67 @@ That's it.
 Now the project is running at `http://localhost:8000` and your routes is:
 
 
-| Route                                                      | HTTP Method 	 | Description                           	      |
-|:-----------------------------------------------------------|:--------------|:---------------------------------------------|
+| Route                                                      | HTTP Method 	   | Description                           	      |
+|:-----------------------------------------------------------|:----------------|:---------------------------------------------|
 | {host}       	                                             | GET       	   | Home page                                    |
-| {host}/admin/  	                                           | GET      	   | Admin control panel                     	    |
-| {host}/accounts/register/                                  | POST      	   | user register           	                    |
-| {host}/accounts/activate/{code}/                           | GET      	   | activate user account after register         |
-| {host}/accounts/login/                                     | POST      	   | user login           	                      |
-| {host}/accounts/logout/                                    | GET      	   | user logout           	                      |
-| {host}/accounts/change_password/                           | POST      	   | user change password           	            |
-| {host}/accounts/profile/                                   | GET      	   | user logout           	                      |
-| {host}/accounts/profile/update/{pk}/                       | PUT      	   | user update checkout information             |
-| {host}/accounts/profile/delete/                            | POST      	   | user delete account           	              |
-| {host}/accounts/reset_password/                            | POST      	   | user email           	                      |
-| {host}/accounts/reset_password/done/                       | POST      	   | send reset password email           	        |
-| {host}/accounts/reset_password/confirm/{uidb64}/{token}/   | POST      	   | enter new password           	              |
-| {host}/accounts/reset_password/complete/                   | POST      	   | finish reset password           	            |
-| {host}/products/                                           | POST      	   | products page          	                    |
-| {host}/products/category/{category}/                       | GET      	   | search products by category          	      |
-| {host}/products/all/                                       | GET      	   | all products           	                    |
-| {host}/products/{slug}/                                    | GET      	   | product detail           	                  |
-| {host}/orders/order/{id}/                                  | POST      	   | order product           	                    |
-| {host}/orders/order/{pk}/update/                           | POST      	   | update order quantity           	            |
-| {host}/orders/order/{id}/delete/                           | POST      	   | delete order           	                    |
-| {host}/orders/cart/                                        | GET      	   | cart page           	                        |
-| {host}/orders/pending/                                     | GET      	   | pending orders           	                  |
-| {host}/orders/rejected/                                    | GET      	   | rejected orders           	                  |
-| {host}/orders/accepted/                                    | GET      	   | accepted orders           	                  |
-| {host}/orders/buy/                                         | POST      	   | buy orders          	                        |
-| {host}/orders/thank_you/                                   | GET      	   | thank you page          	                    |
-| {host}/reviews/add_review/{id}/                            | POST      	   | add review           	                      |
-| {host}/reviews/update_review/{id}/                         | POST      	   | update review           	                    |
-| {host}/reviews/delete_review/{id}/                         | POST      	   | delete review           	                    |
-| {host}/contact_us/                                         | POST      	   | contact us message           	              |
+| {host}/admin/  	                                         | GET      	   | Admin control panel                     	  |
+| {host}/accounts/register/                                  | POST      	   | User register           	                  |
+| {host}/accounts/activate/{code}/                           | GET      	   | Activate user account after register         |
+| {host}/accounts/login/                                     | POST      	   | User login           	                      |
+| {host}/accounts/logout/                                    | GET      	   | User logout           	                      |
+| {host}/accounts/change_password/                           | POST      	   | User change password           	          |
+| {host}/accounts/profile/                                   | GET      	   | User profile          	                      |
+| {host}/accounts/profile/update/{pk}/                       | PUT      	   | User update checkout information             |
+| {host}/accounts/profile/delete/                            | POST      	   | User delete account           	              |
+| {host}/accounts/reset_password/                            | POST      	   | User email           	                      |
+| {host}/accounts/reset_password/done/                       | POST      	   | Send reset password email           	      |
+| {host}/accounts/reset_password/confirm/{uidb64}/{token}/   | POST      	   | Enter new password           	              |
+| {host}/accounts/reset_password/complete/                   | POST      	   | Finish reset password           	          |
+| {host}/products/                                           | POST      	   | Products page          	                  |
+| {host}/products/category/{category}/                       | GET      	   | Search products by category          	      |
+| {host}/products/all/                                       | GET      	   | All products           	                  |
+| {host}/products/{slug}/                                    | GET      	   | Product detail           	                  |
+| {host}/orders/order/{id}/                                  | POST      	   | Order product           	                  |
+| {host}/orders/order/{pk}/update/                           | POST      	   | Update order quantity           	          |
+| {host}/orders/order/{id}/delete/                           | POST      	   | Delete order           	                  |
+| {host}/orders/cart/                                        | GET      	   | Cart page           	                      |
+| {host}/orders/pending/                                     | GET      	   | Pending orders           	                  |
+| {host}/orders/rejected/                                    | GET      	   | Rejected orders           	                  |
+| {host}/orders/accepted/                                    | GET      	   | Accepted orders           	                  |
+| {host}/orders/buy/                                         | POST      	   | Buy orders          	                      |
+| {host}/orders/thank_you/                                   | GET      	   | Thank you page          	                  |
+| {host}/reviews/add_review/{id}/                            | POST      	   | Add review           	                      |
+| {host}/reviews/update_review/{id}/                         | POST      	   | Update review           	                  |
+| {host}/reviews/delete_review/{id}/                         | POST      	   | Delete review           	                  |
+| {host}/contact_us/                                         | POST      	   | Contact us message           	              |
 
 
 
 
-| API Route                                                  | HTTP Method 	 | Description                           	      |
-|:-----------------------------------------------------------|:--------------|:---------------------------------------------|
-| {host}/api/accounts/register/                              | POST      	   | user register                          	    |
-| {host}/api/accounts/login/                                 | POST      	   | user login           	                      |
-| {host}/api/accounts/change_password/                       | PUT      	   | user change password                   	    |
-| {host}/api/accounts/profile/{id}/                          | GET      	   | user logout           	                      |
-| {host}/api/accounts/profile/update/{id}/                   | PUT      	   | user update profile information              |
-| {host}/api/accounts/profile/delete/{id}/                   | DELETE      	 | user delete account           	              |
-| {host}/api/products/                                       | GET      	   | products page          	                    |
-| {host}/api/products/category/{category}/                   | GET      	   | search products by category          	      |
-| {host}/api/products/all/                                   | GET      	   | all products           	                    |
-| {host}/api/products/{slug}/                                | GET      	   | product detail           	                  |
-| {host}/api/orders/order/{id}/                              | POST      	   | order product           	                    |
-| {host}/api/orders/order/{id}/update/                       | PUT      	   | update order quantity           	            |
-| {host}/api/orders/order/{id}/delete/                       | DELETE      	 | delete order           	                    |
-| {host}/api/orders/cart/                                    | GET      	   | cart page           	                        |
-| {host}/api/orders/pending/                                 | GET      	   | pending orders           	                  |
-| {host}/api/orders/rejected/                                | GET      	   | rejected orders           	                  |
-| {host}/api/orders/accepted/                                | GET      	   | accepted orders           	                  |
-| {host}/api/orders/buy/                                     | POST      	   | buy orders          	                        |
-| {host}/api/reviews/add_review/{id}/                        | POST      	   | add review           	                      |
-| {host}/api/reviews/update_review/{id}/                     | POST      	   | update review           	                    |
-| {host}/api/reviews/delete_review/{id}/                     | DELETE      	 | delete review           	                    |
-| {host}/api/contact_us/                                     | POST      	   | contact us message           	              |
+| API Route                                                  | HTTP Method 	   | Description                           	      |
+|:-----------------------------------------------------------|:----------------|:---------------------------------------------|
+| {host}/api/accounts/register/                              | POST      	   | User register                          	  |
+| {host}/api/accounts/login/                                 | POST      	   | User login           	                      |
+| {host}/api/accounts/change_password/                       | PUT      	   | User change password                   	  |
+| {host}/api/accounts/profile/{id}/                          | GET      	   | User profile           	                  |
+| {host}/api/accounts/profile/update/{id}/                   | PUT      	   | User update checkout information             |
+| {host}/api/accounts/profile/delete/{id}/                   | DELETE      	   | User delete account           	              |
+| {host}/api/products/                                       | GET      	   | Products page          	                  |
+| {host}/api/products/category/{category}/                   | GET      	   | Search products by category          	      |
+| {host}/api/products/all/                                   | GET      	   | All products           	                  |
+| {host}/api/products/{slug}/                                | GET      	   | Product detail           	                  |
+| {host}/api/orders/order/{id}/                              | POST      	   | Order product           	                  |
+| {host}/api/orders/order/{id}/update/                       | PUT      	   | Update order quantity           	          |
+| {host}/api/orders/order/{id}/delete/                       | DELETE      	   | Delete order           	                  |
+| {host}/api/orders/cart/                                    | GET      	   | Cart page           	                      |
+| {host}/api/orders/pending/                                 | GET      	   | Pending orders           	                  |
+| {host}/api/orders/rejected/                                | GET      	   | Rejected orders           	                  |
+| {host}/api/orders/accepted/                                | GET      	   | Accepted orders           	                  |
+| {host}/api/orders/buy/                                     | POST      	   | Buy orders          	                      |
+| {host}/api/reviews/add_review/{id}/                        | POST      	   | Add review           	                      |
+| {host}/api/reviews/update_review/{id}/                     | POST      	   | Update review           	                  |
+| {host}/api/reviews/delete_review/{id}/                     | DELETE      	   | Delete review                                |
+| {host}/api/contact_us/                                     | POST      	   | Contact us message                           |
 
 
 
