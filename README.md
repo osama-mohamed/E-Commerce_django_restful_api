@@ -62,6 +62,15 @@ Now the project is running at `http://localhost:8000` and your routes is:
 | {host}/products/category/{category}/            | GET      	     | search products by category          	    |
 | {host}/products/all/                            | GET      	     | all products           	    |
 | {host}/products/{slug}/                         | GET      	     | product detail           	    |
+| {host}/orders/order/{id}/                                | POST      	     | order product           	    |
+| {host}/orders/order/{pk}/update/                         | POST      	     | update order quantity           	    |
+| {host}/orders/order/{id}/delete/                         | POST      	     | delete order           	    |
+| {host}/orders/cart/                              | GET      	     | cart page           	    |
+| {host}/orders/pending/                         | GET      	     | pending orders           	    |
+| {host}/orders/rejected/                         | GET      	     | rejected orders           	    |
+| {host}/orders/accepted/                         | GET      	     | accepted orders           	    |
+| {host}/orders/buy/                               | POST      	     | buy orders          	    |
+| {host}/orders/thank_you/                         | GET      	     | thank you page          	    |
 
 
 
@@ -76,6 +85,18 @@ Now the project is running at `http://localhost:8000` and your routes is:
 | {host}/api/accounts/profile/{id}/             | GET      	       | user logout           	    |
 | {host}/api/accounts/profile/update/{id}/      | PUT      	     | user update profile information     |
 | {host}/api/accounts/profile/delete/{id}/      | DELETE      	     | user delete account           	    |
+| {host}/api/products/                                | GET      	     | products page          	    |
+| {host}/api/products/category/{category}/            | GET      	     | search products by category          	    |
+| {host}/api/products/all/                            | GET      	     | all products           	    |
+| {host}/api/products/{slug}/                         | GET      	     | product detail           	    |
+| {host}/api/orders/order/{id}/                                | POST      	     | order product           	    |
+| {host}/api/orders/order/{id}/update/                         | PUT      	     | update order quantity           	    |
+| {host}/api/orders/order/{id}/delete/                         | DELETE      	     | delete order           	    |
+| {host}/api/orders/cart/                              | GET      	     | cart page           	    |
+| {host}/api/orders/pending/                         | GET      	     | pending orders           	    |
+| {host}/api/orders/rejected/                         | GET      	     | rejected orders           	    |
+| {host}/api/orders/accepted/                         | GET      	     | accepted orders           	    |
+| {host}/api/orders/buy/                               | POST      	     | buy orders          	    |
 
 
 
